@@ -1,0 +1,229 @@
+name: WAT Website CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: wat-website
+  REGISTRY: docker.io
+
+jobs:
+
+  # ── Job 1: Validate HTML ──────────────────────────────────────────
+  validate:
+    name: Validate HTML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          for f in index.html Dockerfile deployment.yml pom.xml Jenkinsfile; do
+            test -f "$f" && echo "✅ $f present" || (echo "❌ $f missing" && exit 1)
+          done
+
+      - name: Validate HTML content
+        run: |
+          grep -q "World Advanced Technology" index.html && echo "✅ Title OK" || (echo "❌ Title missing" && exit 1)
+          grep -q "worldadvancedtechnilogy23@gmail.com" index.html && echo "✅ Email OK" || echo "⚠ Email not found"
+          grep -q "+237651798173" index.html && echo "✅ Phone OK" || echo "⚠ Phone not found"
+
+      - name: Upload index.html artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-html
+          path: index.html
+
+  # ── Job 2: Build & Push Docker Image ─────────────────────────────
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: validate
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── Job 3: Security Scan ──────────────────────────────────────────
+  security-scan:
+    name: Security Scan (Trivy)
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Upload Trivy SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+  # ── Job 4: Deploy to S3 (static website) ────────────────────────────
+  deploy-s3:
+    name: Deploy to S3
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync to S3 hosting bucket
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_HOSTING_BUCKET }} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "Dockerfile" \
+            --exclude "Jenkinsfile" \
+            --exclude "pom.xml" \
+            --exclude "cloudformation.yml" \
+            --exclude "deployment.yml" \
+            --exclude "*.md"
+
+      - name: Set cache-control for HTML (always fresh)
+        run: |
+          aws s3 cp s3://${{ secrets.S3_HOSTING_BUCKET }}/index.html \
+                    s3://${{ secrets.S3_HOSTING_BUCKET }}/index.html \
+            --metadata-directive REPLACE \
+            --cache-control "public,max-age=0,must-revalidate" \
+            --content-type "text/html; charset=utf-8"
+
+      - name: Set cache-control for images (1 year)
+        run: |
+          aws s3 cp s3://${{ secrets.S3_HOSTING_BUCKET }}/images/ \
+                    s3://${{ secrets.S3_HOSTING_BUCKET }}/images/ \
+            --recursive \
+            --metadata-directive REPLACE \
+            --cache-control "public,max-age=31536000,immutable" 2>/dev/null || true
+
+      - name: Verify deployment
+        run: |
+          aws s3 ls s3://${{ secrets.S3_HOSTING_BUCKET }}/index.html
+          echo "✅ S3 deployment complete"
+
+  # ── Job 5: Deploy to Staging (Kubernetes) ────────────────────────────
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.worldadvancedtechnology.cm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_STAGING }}
+
+      - name: Deploy to staging namespace
+        run: |
+          kubectl apply -f deployment.yml --namespace=staging
+          kubectl set image deployment/wat-website \
+            wat-website=${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} \
+            --namespace=staging
+          kubectl rollout status deployment/wat-website --namespace=staging --timeout=120s
+
+      - name: Smoke test staging
+        run: |
+          STAGING_URL="https://staging.worldadvancedtechnology.cm"
+          sleep 10
+          curl -sf "$STAGING_URL" | grep -q "World Advanced Technology" && echo "✅ Smoke test PASSED" || echo "⚠ Smoke test could not verify (check URL)"
+
+  # ── Job 6: Deploy to Production ───────────────────────────────────
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, security-scan, deploy-s3]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://worldadvancedtechnology.cm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_PROD }}
+
+      - name: Deploy to production namespace
+        run: |
+          kubectl apply -f deployment.yml --namespace=production
+          kubectl set image deployment/wat-website \
+            wat-website=${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} \
+            --namespace=production
+          kubectl rollout status deployment/wat-website --namespace=production --timeout=180s
+          echo "✅ Production deployment complete: ${{ github.sha }}"
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "Deployment successful — commit ${{ github.sha }} is now live on production."
+          # Optionally: curl Slack/email webhook here

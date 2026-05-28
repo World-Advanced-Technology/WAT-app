@@ -1,0 +1,210 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  WAT Website Infrastructure — S3 static hosting + private data bucket +
+  Cognito Identity Pool for secure browser-side uploads and data persistence.
+  Deploy with: aws cloudformation deploy --template-file cloudformation.yml
+  --stack-name wat-website --capabilities CAPABILITY_NAMED_IAM
+
+Parameters:
+  HostingBucketName:
+    Type: String
+    Default: wat-website-hosting
+    Description: S3 bucket that serves the static website
+  DataBucketName:
+    Type: String
+    Default: wat-website-data
+    Description: S3 bucket that stores CV uploads and form submissions
+  AllowedOrigin:
+    Type: String
+    Default: https://worldadvancedtechnologies.com
+    Description: Your website origin for CORS (no trailing slash)
+
+Resources:
+
+  # ── 1. Website Hosting Bucket ─────────────────────────────────────────────
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref HostingBucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${WebsiteBucket.Arn}/*'
+
+  # ── 2. Data Bucket (CVs, contacts, registrations) ─────────────────────────
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DataBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [PUT, POST]
+            AllowedOrigins:
+              - !Ref AllowedOrigin
+              - 'https://www.worldadvancedtechnologies.com'
+              - !GetAtt WebsiteBucket.WebsiteURL
+              - 'http://localhost:*'
+            ExposedHeaders: [ETag]
+            MaxAge: 3600
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveCVsAfter90Days
+            Status: Enabled
+            Prefix: uploads/cvs/
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: GLACIER
+          - Id: ArchiveFormDataAfter1Year
+            Status: Enabled
+            Prefix: data/
+            Transitions:
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+
+  # ── 3. Cognito Identity Pool (anonymous visitors get temp AWS credentials) ─
+  IdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: WATWebsiteVisitors
+      AllowUnauthenticatedIdentities: true
+
+  # ── 4. IAM Role — write-only access for anonymous visitors ────────────────
+  UnauthenticatedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: WAT-CognitoUnauth-S3WriteOnly
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'cognito-identity.amazonaws.com:aud': !Ref IdentityPool
+              ForAnyValue:StringLike:
+                'cognito-identity.amazonaws.com:amr': unauthenticated
+      Policies:
+        - PolicyName: DataBucketWriteOnly
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: s3:PutObject
+                Resource:
+                  - !Sub '${DataBucket.Arn}/uploads/cvs/*'
+                  - !Sub '${DataBucket.Arn}/data/contacts/*'
+                  - !Sub '${DataBucket.Arn}/data/registrations/*'
+                  - !Sub '${DataBucket.Arn}/data/subscribers/*'
+                  - !Sub '${DataBucket.Arn}/data/appointments/*'
+
+  # ── 5. IAM Role — authenticated visitors (future: add Cognito User Pool) ──
+  AuthenticatedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: WAT-CognitoAuth-S3ReadWrite
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'cognito-identity.amazonaws.com:aud': !Ref IdentityPool
+              ForAnyValue:StringLike:
+                'cognito-identity.amazonaws.com:amr': authenticated
+      Policies:
+        - PolicyName: DataBucketReadWrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: [s3:PutObject, s3:GetObject]
+                Resource:
+                  - !Sub '${DataBucket.Arn}/uploads/cvs/*'
+                  - !Sub '${DataBucket.Arn}/data/*'
+
+  # ── 6. Attach roles to identity pool ──────────────────────────────────────
+  IdentityPoolRoles:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref IdentityPool
+      Roles:
+        unauthenticated: !GetAtt UnauthenticatedRole.Arn
+        authenticated: !GetAtt AuthenticatedRole.Arn
+
+  # ── 7. IAM User for CI/CD S3 deployment ───────────────────────────────────
+  DeployUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: wat-website-deploy
+      Policies:
+        - PolicyName: WebsiteDeployPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: [s3:PutObject, s3:GetObject, s3:DeleteObject, s3:ListBucket]
+                Resource:
+                  - !GetAtt WebsiteBucket.Arn
+                  - !Sub '${WebsiteBucket.Arn}/*'
+
+  DeployUserKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref DeployUser
+
+Outputs:
+  WebsiteURL:
+    Description: S3 static website URL (direct, no HTTPS — use CloudFront for HTTPS)
+    Value: !GetAtt WebsiteBucket.WebsiteURL
+
+  HostingBucketName:
+    Description: "→ CI/CD secret: S3_HOSTING_BUCKET"
+    Value: !Ref WebsiteBucket
+
+  DataBucketName:
+    Description: "→ index.html: AWSConfig.DATA_BUCKET"
+    Value: !Ref DataBucket
+
+  IdentityPoolId:
+    Description: "→ index.html: AWSConfig.IDENTITY_POOL_ID"
+    Value: !Ref IdentityPool
+
+  Region:
+    Description: "→ index.html: AWSConfig.REGION  and  CI/CD secret: AWS_REGION"
+    Value: !Ref AWS::Region
+
+  DeployAccessKeyId:
+    Description: "→ CI/CD secret: AWS_ACCESS_KEY_ID"
+    Value: !Ref DeployUserKey
+
+  DeploySecretKey:
+    Description: "→ CI/CD secret: AWS_SECRET_ACCESS_KEY  (save now — shown only once)"
+    Value: !GetAtt DeployUserKey.SecretAccessKey

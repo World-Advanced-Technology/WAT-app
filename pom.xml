@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.worldadvancedtechnology</groupId>
+    <artifactId>wat-website</artifactId>
+    <version>1.0.0</version>
+    <packaging>war</packaging>
+
+    <name>WORLD ADVANCED TECHNOLOGY Website</name>
+    <description>Company website for World Advanced Technology — IT Consultancy, DevOps and VoIP Solutions, Yaoundé, Cameroon</description>
+    <url>https://worldadvancedtechnology.cm</url>
+
+    <organization>
+        <name>World Advanced Technology</name>
+        <url>https://worldadvancedtechnology.cm</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>ngwaclovis</id>
+            <name>NGWA CLOVIS OCHANG</name>
+            <email>ngwaco23@gmail.com</email>
+            <roles>
+                <role>CEO</role>
+                <role>Lead Architect</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <docker.image.name>wat-website</docker.image.name>
+        <docker.image.tag>${project.version}</docker.image.tag>
+    </properties>
+
+    <dependencies>
+        <!-- HTML validation via HtmlUnit -->
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.70.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 for integration tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Selenium for UI testing -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.15.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- Copy static assets to target -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-web-assets</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>copy-resources</goal></goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/web</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>index.html</include>
+                                        <include>images/**</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- HTML validation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>validate-html</id>
+                        <phase>validate</phase>
+                        <goals><goal>exec</goal></goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>test -f index.html &amp;&amp; grep -q "World Advanced Technology" index.html &amp;&amp; echo "HTML validation passed" || (echo "HTML validation failed" &amp;&amp; exit 1)</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Docker build via fabric8 plugin -->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.43.4</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.image.name}:${docker.image.tag}</name>
+                            <build>
+                                <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                <contextDir>${project.basedir}</contextDir>
+                                <tags>
+                                    <tag>${docker.image.tag}</tag>
+                                    <tag>latest</tag>
+                                </tags>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker-build</id>
+                        <phase>package</phase>
+                        <goals><goal>build</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Surefire for JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+
+            <!-- WAR packaging (for Tomcat deployment) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <warSourceDirectory>${project.basedir}</warSourceDirectory>
+                    <webXml>${project.basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+                    <failIfNoWebXml>false</failIfNoWebXml>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <docker.image.tag>latest</docker.image.tag>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

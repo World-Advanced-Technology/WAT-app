@@ -1,0 +1,2 @@
+# Redirect www to apex domain
+https://www.worldadvancedtechnologies.com/* https://worldadvancedtechnologies.com/:splat 301!
