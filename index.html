@@ -1683,6 +1683,243 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
 .mega-cta-inner{transform-style:preserve-3d}
 /* Testimonial trust bar depth */
 .testi-trust-bar{transform:translateZ(10px)}
+
+/* ========================================================
+   ENHANCED 3D + BEAUTIFUL LIGHT MODE UPGRADES
+   ======================================================== */
+
+/* ── Light mode: rich layered hero background ── */
+.theme-light .hero-bg{background:radial-gradient(ellipse 100% 80% at 50% -10%,rgba(0,80,210,.22) 0%,transparent 60%),radial-gradient(ellipse 55% 50% at 88% 70%,rgba(184,146,10,.12) 0%,transparent 55%),radial-gradient(ellipse 45% 55% at 5% 90%,rgba(0,82,180,.10) 0%,transparent 60%),linear-gradient(170deg,#c5d8f5 0%,#d8e9fa 30%,#ecf3fc 60%,#f8faff 100%)!important}
+
+/* ── Light mode: beautiful dot-grid on hero ── */
+.theme-light #hero::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(0,60,150,.18) 1px,transparent 1px);background-size:28px 28px;opacity:.35;z-index:1;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 75%)}
+
+/* ── Light mode: circuit grid (dot style) ── */
+.theme-light .circuit-grid{opacity:.07!important;background-image:radial-gradient(circle,rgba(0,60,150,.55) 1px,transparent 1px),radial-gradient(circle,rgba(0,60,150,.28) 1px,transparent 1px)!important;background-size:30px 30px,60px 60px!important;background-position:0 0,15px 15px!important}
+.theme-light .circuit-grid::before{background-image:none!important}
+
+/* ── Light mode: scan line subtle blue tint ── */
+.theme-light .scan-line{background:linear-gradient(90deg,transparent,rgba(0,60,150,.28) 30%,rgba(0,100,200,.22) 50%,rgba(0,60,150,.28) 70%,transparent)!important;opacity:.12!important}
+
+/* ── Light mode body background ── */
+.theme-light body{background:linear-gradient(180deg,#f5f9ff 0%,#ffffff 100%)}
+
+/* ── Light mode section backgrounds ── */
+.theme-light #about{background:linear-gradient(180deg,#eef5ff 0%,#f5f9ff 100%);position:relative}
+.theme-light #about::before{background-image:linear-gradient(rgba(0,60,150,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,60,150,.035) 1px,transparent 1px)!important;background-size:44px 44px!important}
+.theme-light #services{background:linear-gradient(180deg,#f8faff 0%,#ffffff 100%)}
+.theme-light #team{background:linear-gradient(180deg,#eef5ff 0%,#f5f9ff 100%)}
+.theme-light #careers{background:linear-gradient(180deg,#f5f9ff 0%,#f8faff 100%)}
+.theme-light #contact{background:linear-gradient(180deg,#eef5ff 0%,#f5f9ff 100%)}
+.theme-light #reviews{background:linear-gradient(180deg,#f8faff 0%,#ffffff 100%)}
+.theme-light #why-wat{background:linear-gradient(180deg,#f5f9ff 0%,#eef5ff 100%)}
+
+/* ── Light mode: VoIP section ── */
+.theme-light #voip{background:linear-gradient(135deg,#d5e7f8 0%,#e4effc 45%,#d2e5f6 100%)!important;position:relative}
+.theme-light #voip::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,60,150,.038) 1px,transparent 1px),linear-gradient(90deg,rgba(0,60,150,.038) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;z-index:0}
+.theme-light .voip-diagram-box{background:rgba(255,255,255,.72);border-color:rgba(0,82,180,.16)!important;box-shadow:0 8px 32px rgba(0,60,150,.10)}
+
+/* ── Light mode: footer ── */
+.theme-light footer{background:linear-gradient(180deg,#d0e2f4 0%,#c0d5ec 100%)!important;border-top:1px solid rgba(0,60,150,.13)!important}
+
+/* ── Light mode: glass cards — layered 3D shadow ── */
+.theme-light .glass{background:rgba(255,255,255,.93)!important;backdrop-filter:blur(22px) saturate(190%);-webkit-backdrop-filter:blur(22px) saturate(190%);border:1px solid rgba(0,60,150,.13)!important;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 10px rgba(0,60,150,.07),0 14px 28px rgba(0,60,150,.09),inset 0 1px 0 rgba(255,255,255,.95)!important}
+
+/* ── Light mode: service cards ── */
+.theme-light .svc-card{background:rgba(255,255,255,.90)!important;border:1px solid rgba(0,60,150,.13)!important;box-shadow:0 2px 6px rgba(0,60,150,.06),0 10px 22px rgba(0,60,150,.09),0 22px 44px rgba(0,60,150,.06),inset 0 1px 0 rgba(255,255,255,1)!important}
+.theme-light .svc-card:hover{box-shadow:0 6px 14px rgba(0,60,150,.12),0 20px 36px rgba(0,60,150,.15),0 36px 72px rgba(0,60,150,.10),inset 0 1px 0 rgba(255,255,255,1)!important}
+.theme-light .svc-card::after{background:conic-gradient(from var(--ang),rgba(0,82,180,0) 0%,rgba(0,82,180,.65) 25%,rgba(0,150,255,.55) 50%,rgba(85,0,187,.45) 75%,rgba(0,82,180,0) 100%)!important}
+.theme-light .svc-icon{background:linear-gradient(135deg,rgba(0,82,180,.10),rgba(0,150,255,.06))!important;border-color:rgba(0,82,180,.22)!important;color:#004aab!important}
+.theme-light .svc-card:hover .svc-icon{background:linear-gradient(135deg,rgba(0,82,180,.19),rgba(0,150,255,.12))!important;border-color:rgba(0,82,180,.50)!important;box-shadow:0 0 22px rgba(0,82,180,.2)!important}
+
+/* ── Light mode: team cards ── */
+.theme-light .team-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.11);box-shadow:0 2px 6px rgba(0,60,150,.06),0 10px 20px rgba(0,60,150,.09),inset 0 1px 0 rgba(255,255,255,1)}
+
+/* ── Light mode: testimonial cards ── */
+.theme-light .testi-card{background:rgba(255,255,255,.90);border-left:3px solid #004aab;box-shadow:0 2px 8px rgba(0,60,150,.07),0 14px 28px rgba(0,60,150,.10),inset 0 1px 0 rgba(255,255,255,1)}
+
+/* ── Light mode: VoIP device showcase cards ── */
+.theme-light .vdr-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.12);box-shadow:0 2px 8px rgba(0,60,150,.07),0 12px 24px rgba(0,60,150,.10)}
+.theme-light .device-card{border-left:3px solid #004aab!important;background:rgba(255,255,255,.82);box-shadow:0 4px 16px rgba(0,60,150,.09)}
+.theme-light .device-card h4{color:#004aab!important}
+
+/* ── Light mode: payment cards ── */
+.theme-light .pay-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.11);box-shadow:0 2px 8px rgba(0,60,150,.07),0 10px 22px rgba(0,60,150,.09),inset 0 1px 0 rgba(255,255,255,1)}
+.theme-light .pay-card:hover{box-shadow:0 8px 18px rgba(0,60,150,.12),0 24px 44px rgba(0,60,150,.12)!important}
+
+/* ── Light mode: job items ── */
+.theme-light .job-item{background:rgba(255,255,255,.88);border-left:3px solid rgba(0,82,180,.38)!important;box-shadow:0 2px 8px rgba(0,60,150,.06),0 8px 18px rgba(0,60,150,.08)}
+.theme-light .job-item:hover{border-left-color:#004aab!important;box-shadow:inset 5px 0 22px rgba(0,74,171,.07),0 8px 24px rgba(0,60,150,.12)!important}
+
+/* ── Light mode: contact info cards ── */
+.theme-light .cinfo-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.11);box-shadow:0 2px 6px rgba(0,60,150,.06),0 8px 18px rgba(0,60,150,.08)}
+.theme-light .cinfo-icon{background:rgba(184,146,10,.12);border-color:rgba(180,120,0,.25);box-shadow:0 4px 12px rgba(184,146,10,.10)}
+
+/* ── Light mode: review cards ── */
+.theme-light .rv-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.10);box-shadow:0 2px 8px rgba(0,60,150,.07),0 10px 20px rgba(0,60,150,.08)}
+.theme-light .review-input-card{background:rgba(255,255,255,.92);border:1px solid rgba(0,60,150,.13);box-shadow:0 4px 20px rgba(0,60,150,.10)}
+
+/* ── Light mode: why-card ── */
+.theme-light .why-card{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.11);box-shadow:0 2px 8px rgba(0,60,150,.07),0 12px 26px rgba(0,60,150,.09),inset 0 1px 0 rgba(255,255,255,1)}
+.theme-light .why-card:hover{box-shadow:0 6px 14px rgba(0,60,150,.11),0 20px 38px rgba(0,60,150,.13),inset 0 1px 0 rgba(255,255,255,1)!important}
+
+/* ── Light mode: how-it-works steps ── */
+.theme-light .hiw-step{background:rgba(255,255,255,.90);border:1px solid rgba(0,60,150,.11);box-shadow:0 4px 16px rgba(0,60,150,.09)}
+
+/* ── Light mode: VoIP quick-stats ── */
+.theme-light .vqs{background:rgba(255,255,255,.88)!important;border-color:rgba(0,82,180,.16)!important;box-shadow:0 4px 14px rgba(0,60,150,.09)}
+.theme-light .vqs-n{background:linear-gradient(135deg,#9a6700,#004aab)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
+
+/* ── Light mode: gradient text overrides ── */
+.theme-light .sec-title .grad{filter:none!important;background:linear-gradient(135deg,#9a6700,#004aab)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
+.theme-light .about-text h2 .grad{background:linear-gradient(135deg,#9a6700,#004aab)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
+.theme-light .voip-benefits h3 .grad{background:linear-gradient(135deg,#9a6700,#004aab)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
+.theme-light .hero-title .grad{filter:none!important;background:linear-gradient(135deg,#c4890a,#004aab)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
+
+/* ── Light mode: hstat numbers ── */
+.theme-light .hstat-n{filter:none!important;background:linear-gradient(135deg,#b8860b,#004aab);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Light mode: why-num ── */
+.theme-light .why-num{filter:none!important;animation:none!important;background:linear-gradient(135deg,#b8860b,#004aab);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Light mode: tech pills & cert badges ── */
+.theme-light .tech-pill{background:rgba(0,74,171,.09)!important;border-color:rgba(0,74,171,.22)!important;color:#004aab!important;box-shadow:0 1px 4px rgba(0,74,171,.08)!important}
+.theme-light .cert-badge{background:rgba(0,74,171,.10)!important;border-color:rgba(0,74,171,.22)!important;color:#004aab!important;box-shadow:0 2px 8px rgba(0,74,171,.08)!important}
+
+/* ── Light mode: hero stats separator ── */
+.theme-light .hero-stats{border-top-color:rgba(0,60,150,.12)}
+
+/* ── Light mode: mega CTA inner ── */
+.theme-light .mega-cta-inner{background:linear-gradient(135deg,rgba(0,60,150,.06),rgba(184,146,10,.06));border:1px solid rgba(0,60,150,.13);box-shadow:0 8px 40px rgba(0,60,150,.10)}
+
+/* ── Light mode: newsletter ── */
+.theme-light #newsletter{background:linear-gradient(135deg,rgba(184,146,10,.09),rgba(0,74,171,.08));border-color:rgba(0,74,171,.13)}
+.theme-light .nl-form input{background:rgba(255,255,255,.92);border-color:rgba(0,60,150,.16);color:var(--txt)}
+
+/* ── Light mode: CEO photo frame ── */
+.theme-light .ceo-photo-frame{box-shadow:0 0 0 5px rgba(184,146,10,.15),0 8px 32px rgba(0,60,150,.15)}
+
+/* ── Light mode: scrollbar ── */
+.theme-light ::-webkit-scrollbar-thumb{background:linear-gradient(#b8860b,#004aab)!important;box-shadow:none!important}
+
+/* ── Light mode: progress bar ── */
+.theme-light #progress-bar{background:linear-gradient(90deg,#004aab,#b8860b,#5500BB,#004aab)!important;background-size:200% 100%!important;animation:shimmer 3s linear infinite!important}
+
+/* ===== ENHANCED 3D EFFECTS (ALL MODES) ===== */
+
+/* Deeper 3D on service cards */
+.svc-card:hover{transform:rotateX(-5deg) rotateY(5deg) translateY(-8px) scale(1.02)!important;box-shadow:10px 18px 44px rgba(0,0,0,.32),0 0 0 1px rgba(0,212,255,.14),var(--shadg)!important}
+.theme-light .svc-card:hover{box-shadow:10px 18px 44px rgba(0,60,150,.16),0 0 0 1px rgba(0,82,180,.14),0 0 28px rgba(0,82,180,.10)!important}
+
+/* 3D content layers inside service card */
+.svc-card .svc-img-wrap{transform:translateZ(5px)}
+.svc-card .svc-icon{transform:translateZ(12px)}
+.svc-card h3{transform:translateZ(16px)}
+.svc-card>p{transform:translateZ(10px)}
+.svc-card .tech-pills{transform:translateZ(12px)}
+
+/* More dramatic team card 3D tilt */
+.team-card:hover{transform:translateY(-7px) rotateX(-3deg) rotateY(3deg)!important;box-shadow:6px 14px 34px rgba(0,0,0,.26),0 0 0 1px rgba(255,215,0,.14),var(--shadg)!important}
+.theme-light .team-card:hover{box-shadow:6px 14px 34px rgba(0,60,150,.15),0 0 0 1px rgba(0,82,180,.12)!important}
+
+/* Testimonial 3D lift */
+.testi-card:hover{transform:translateY(-7px) rotateX(-2deg)!important;box-shadow:0 14px 44px rgba(0,0,0,.26),var(--shadg)!important}
+.theme-light .testi-card:hover{box-shadow:0 14px 44px rgba(0,60,150,.15)!important}
+
+/* VoIP device 3D showcase */
+.vdr-card:hover{transform:translateY(-9px) rotateX(-4deg) scale(1.025)!important;box-shadow:0 20px 48px rgba(0,0,0,.32),0 0 28px rgba(255,215,0,.22)!important}
+.theme-light .vdr-card:hover{box-shadow:0 20px 48px rgba(0,60,150,.16),0 0 28px rgba(0,82,180,.12)!important}
+
+/* Payment card 3D */
+.pay-card:hover{transform:translateY(-7px) rotateX(-2deg) scale(1.025)!important}
+
+/* CEO card tilt */
+.ceo-card .glass{transform-style:preserve-3d;transition:transform .4s ease,box-shadow .4s ease}
+.ceo-card .glass:hover{transform:rotateX(-3deg) rotateY(4deg) translateY(-4px)}
+
+/* Why cards 3D tilt */
+.why-card:hover{transform:translateY(-6px) rotateX(-3deg) rotateY(3deg)!important}
+
+/* HIW step lift */
+.hiw-step:hover{transform:translateY(-5px) rotateX(-2deg)!important;box-shadow:0 10px 30px rgba(0,0,0,.22),var(--shadg)!important}
+.theme-light .hiw-step:hover{box-shadow:0 10px 30px rgba(0,60,150,.13)!important}
+
+/* Floating number pulse animation (dark) */
+@keyframes numFloat3d{0%,100%{transform:translateZ(30px) translateY(0) scale(1)}50%{transform:translateZ(36px) translateY(-5px) scale(1.04)}}
+.why-num{animation:numFloat3d 4s ease-in-out infinite!important}
+.theme-light .why-num{animation:none!important}
+
+/* Contact info icon glow lift */
+.cinfo-card:hover{transform:translateY(-3px)!important}
+
+/* Job item 3D slide */
+.job-item:hover{transform:translateX(6px) rotateY(-2deg)!important;box-shadow:inset 5px 0 25px rgba(0,212,255,.1),var(--shadt)!important}
+.theme-light .job-item:hover{transform:translateX(6px) rotateY(-2deg)!important;box-shadow:inset 5px 0 22px rgba(0,74,171,.07),0 8px 24px rgba(0,60,150,.12)!important}
+
+/* Review card lift */
+.rv-card:hover{transform:translateY(-4px)!important;box-shadow:0 10px 28px rgba(0,0,0,.18),var(--shadg)!important}
+.theme-light .rv-card:hover{box-shadow:0 10px 28px rgba(0,60,150,.12)!important}
+
+/* Device card glow (dark) */
+.device-card:hover{box-shadow:0 0 24px rgba(0,212,255,.15),0 6px 20px rgba(0,0,0,.2)!important}
+.theme-light .device-card:hover{box-shadow:0 6px 20px rgba(0,60,150,.12)!important}
+
+/* ── 3D shimmer keyframe for progress bar ── */
+@keyframes barShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+#progress-bar{background:linear-gradient(90deg,var(--teal),var(--gold),var(--cyber),var(--teal));background-size:300% 100%;animation:barShimmer 4s linear infinite}
+
+/* ── All interactive cards: preserve-3d ── */
+.svc-card,.team-card,.testi-card,.vdr-card,.pay-card,.why-card,.hiw-step,.rv-card,.job-item{transform-style:preserve-3d;will-change:transform}
+
+/* ── Light mode: cinfo card 3D ── */
+.theme-light .cinfo-card:hover{box-shadow:0 6px 20px rgba(0,60,150,.10)!important}
+
+/* ── Light mode: voip benefit icon hover ── */
+.theme-light .benefit-item:hover .benefit-icon{background:rgba(0,74,171,.18)!important;border-color:rgba(0,74,171,.45)!important;box-shadow:0 0 18px rgba(0,74,171,.18)!important}
+
+/* ── Light mode form section ── */
+.theme-light #contact-form .glass{background:rgba(255,255,255,.94)!important;box-shadow:0 4px 20px rgba(0,60,150,.09),0 16px 40px rgba(0,60,150,.07)!important}
+
+/* ── Light mode: star rating ── */
+.theme-light .star-rating span{color:rgba(0,0,0,.14)}
+.theme-light .star-rating span.lit{color:var(--gold);filter:drop-shadow(0 0 4px rgba(184,146,10,.4))}
+
+/* ── Light mode: modal ── */
+.theme-light .modal-box{background:#fff;border:1px solid rgba(0,60,150,.14);box-shadow:0 8px 40px rgba(0,60,150,.14),0 32px 80px rgba(0,60,150,.10)}
+
+/* ── Light mode badge on service cards ── */
+.theme-light .svc-card .svc-badge{background:rgba(0,74,171,.1);border-color:rgba(0,74,171,.22);color:#004aab}
+
+/* ── Light mode: vdr badge ── */
+.theme-light .vdr-badge{background:rgba(0,74,171,.10);color:#004aab;border-color:rgba(0,74,171,.28)}
+.theme-light .vdr-badge.orange{background:rgba(180,120,0,.10);color:#9a6700;border-color:rgba(180,120,0,.28)}
+.theme-light .vdr-badge.purple{background:rgba(85,0,187,.10);color:#5500BB;border-color:rgba(85,0,187,.28)}
+
+/* ── Light mode: vdr specs pills ── */
+.theme-light .vdr-specs span{background:rgba(0,74,171,.09);color:#004aab;border-color:rgba(0,74,171,.22)}
+
+/* ── Light mode: voip client tags (already overridden, enhance) ── */
+.theme-light .client-tag.bank{background:rgba(0,100,0,.08);border-color:rgba(0,120,0,.26);color:#006400;box-shadow:0 2px 8px rgba(0,100,0,.06)}
+.theme-light .client-tag.micro{background:rgba(0,60,170,.08);border-color:rgba(0,80,200,.26);color:#003dab;box-shadow:0 2px 8px rgba(0,60,170,.06)}
+
+/* ── Light mode: map wrapper ── */
+.theme-light .map-wrap{border-color:rgba(0,60,150,.14);box-shadow:0 4px 14px rgba(0,60,150,.08)}
+
+/* ── Light mode: social link hover ── */
+.theme-light .social-link:hover{background:linear-gradient(135deg,rgba(0,74,171,.15),rgba(184,146,10,.08));border-color:rgba(0,74,171,.35);color:#004aab;box-shadow:0 0 14px rgba(0,74,171,.16)}
+
+/* ── Light mode: hero badge enhanced ── */
+.theme-light .hero-badge{background:rgba(0,74,171,.09)!important;border:1px solid rgba(0,74,171,.25)!important;color:#004aab!important;box-shadow:0 0 22px rgba(0,74,171,.14),inset 0 0 12px rgba(0,74,171,.05)!important;font-family:var(--fm)!important}
+
+/* ── Light mode: scroll-down arrow ── */
+.theme-light .scroll-down span{border-right-color:#004aab!important;border-bottom-color:#004aab!important;filter:drop-shadow(0 0 4px rgba(0,74,171,.35))!important}
+
+/* ── 3D perspective wrapper for hero content ── */
+.hero-content{perspective:1200px}
+
+/* ── Light mode: about section grid line overlay ── */
+.theme-light #about::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(0,60,150,.12) 1px,transparent 1px);background-size:32px 32px;opacity:.4;z-index:0}
+
 </style>
 </head>
 <body data-theme="dark" data-lang="en">
@@ -4520,7 +4757,7 @@ if('serviceWorker' in navigator){
     dot.style.left=mx+'px';dot.style.top=my+'px';
   },{passive:true});
   (function lerp(){
-    rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+    rx+=(mx-rx)*.22;ry+=(my-ry)*.22;
     ring.style.left=rx+'px';ring.style.top=ry+'px';
     requestAnimationFrame(lerp);
   })();
