@@ -1802,6 +1802,7 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
     <ul class="nav-links" id="nav-links">
       <li><a href="#about" data-i18n="nav.about">About</a></li>
       <li><a href="#services" data-i18n="nav.services">Services</a></li>
+      <li><a href="#our-work">Our Work</a></li>
       <li><a href="#voip" data-i18n="nav.voip">VoIP</a></li>
       <li><a href="#team" data-i18n="nav.team">Team</a></li>
       <li><a href="#careers" data-i18n="nav.careers">Careers</a></li>
@@ -2062,6 +2063,161 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
     </div>
   </div>
 </section>
+
+<!-- ========== OUR WORK / GALLERY ========== -->
+<section id="our-work" class="sec" style="background:var(--bg2)">
+  <div class="container">
+    <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem">Real Projects</p>
+    <h2 class="sec-title" style="text-align:center;margin-bottom:.5rem">Our Work in Action</h2>
+    <p class="sec-sub">From CCTV installations to server rooms — real jobs done by the WAT team on the ground.</p>
+
+    <!-- Filter Buttons -->
+    <div style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2.5rem">
+      <button class="wat-filter-btn active" data-filter="all" onclick="watFilter(this,'all')">All</button>
+      <button class="wat-filter-btn" data-filter="cctv" onclick="watFilter(this,'cctv')">CCTV</button>
+      <button class="wat-filter-btn" data-filter="network" onclick="watFilter(this,'network')">Network</button>
+      <button class="wat-filter-btn" data-filter="wireless" onclick="watFilter(this,'wireless')">Wireless</button>
+      <button class="wat-filter-btn" data-filter="support" onclick="watFilter(this,'support')">IT Support</button>
+      <button class="wat-filter-btn" data-filter="video" onclick="watFilterVideo(this)">&#9654; Videos</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="wat-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+
+      <!-- CCTV -->
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/2fdd24cb-a952-401d-9ebe-9b86557907c3.JPG" alt="CCTV dome camera installation" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Dome camera installation — precise mounting on site</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/9a3e5939-a693-4dd9-81e3-8433539da04a.JPG" alt="Cable routing for CCTV" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Cable routing and concealment during CCTV setup</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_2975.jpg" alt="Completed CCTV system live feed" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Completed 9-camera CCTV system — live multi-view feed</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/PHOTO-2024-10-06-18-07-05.jpg" alt="CCTV monitoring workstation" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CCTV monitoring workstation configured and operational</p></div>
+      </div>
+
+      <!-- Network -->
+      <div class="wat-card glass" data-cat="network" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_4034.JPG" alt="Structured cabling server rack" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Professional patch panel and structured cabling in server rack</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="network" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_4154.JPG" alt="Full server room setup" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Full server room — three Cisco racks installed and commissioned</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="network" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_8091.jpg" alt="Network cabinet inspection" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Network cabinet inspection and hardware verification</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="network" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_0136.jpg" alt="On-site equipment setup" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>On-site equipment setup and cabling configuration</p></div>
+      </div>
+
+      <!-- Wireless -->
+      <div class="wat-card glass" data-cat="wireless" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_8116.jpg" alt="InfiNet wireless rooftop installation" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-wifi">Wireless</span><p>InfiNet wireless access points installed and configured on rooftop</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="wireless" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/sta.jpg" alt="Mounted wireless antenna aerial view" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-wifi">Wireless</span><p>Wireless antenna mounted — aerial view of rooftop deployment</p></div>
+      </div>
+
+      <!-- IT Support -->
+      <div class="wat-card glass" data-cat="support" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/fc1cb030-3c15-4bdc-9ff7-a9a557357aea.jpg" alt="On-site technical survey" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-sup">IT Support</span><p>On-site technical survey and project documentation</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="support" data-animate>
+        <div class="wat-img-wrap"><img src="jobs/IMG_4799.jpg" alt="IT equipment maintenance" loading="lazy"></div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-sup">IT Support</span><p>Office IT equipment servicing and maintenance</p></div>
+      </div>
+
+      <!-- Videos -->
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-vid-wrap">
+          <video src="jobs/cctv01.mp4" controls muted playsinline preload="metadata"></video>
+        </div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CCTV installation in progress — full site walkthrough</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="network" data-animate>
+        <div class="wat-vid-wrap">
+          <video src="jobs/IMG_8129.mp4" controls muted playsinline preload="metadata"></video>
+        </div>
+        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Network infrastructure deployment — on-site footage</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-vid-wrap">
+          <video src="jobs/v09044g40000cud3hovog65vcbr34vp0.MP4" controls muted playsinline preload="metadata"></video>
+        </div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>KUBENETES WORKFLOW</p></div>
+      </div>
+
+      <div class="wat-card glass" data-cat="cctv" data-animate>
+        <div class="wat-vid-wrap">
+          <video src="jobs/v09044g40000d1f7ghfog65sslottpt0.MP4" controls muted playsinline preload="metadata"></video>
+        </div>
+        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CI/CD PIPELINE DEPLOYMENT</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.wat-filter-btn{padding:.45rem 1.1rem;border-radius:2rem;border:1px solid var(--bdr);background:transparent;color:var(--txt2);cursor:pointer;font-size:.82rem;font-weight:600;transition:all .25s}
+.wat-filter-btn:hover,.wat-filter-btn.active{background:linear-gradient(135deg,var(--gold),var(--teal));color:#000;border-color:transparent}
+.wat-card{border-radius:var(--r16);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.wat-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,212,255,.15)}
+.wat-img-wrap{width:100%;height:220px;overflow:hidden}
+.wat-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.wat-card:hover .wat-img-wrap img{transform:scale(1.06)}
+.wat-card-body{padding:1rem 1.1rem}
+.wat-card-body p{color:var(--txt2);font-size:.85rem;margin:.4rem 0 0;line-height:1.45}
+.wat-tag{display:inline-block;padding:.18rem .65rem;border-radius:2rem;font-size:.72rem;font-weight:700;background:rgba(0,212,255,.15);color:var(--teal)}
+.wat-tag-net{background:rgba(255,215,0,.15);color:var(--gold)}
+.wat-tag-wifi{background:rgba(0,255,136,.15);color:#00ff88}
+.wat-tag-sup{background:rgba(189,0,255,.15);color:#c47dff}
+.wat-card[data-hidden]{display:none}
+.wat-vid-wrap{width:100%;height:220px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+.wat-vid-wrap video{width:100%;height:100%;object-fit:cover}
+</style>
+
+<script>
+function watFilter(btn,cat){
+  document.querySelectorAll('.wat-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.wat-card').forEach(c=>{
+    if(cat==='all'||c.dataset.cat===cat){c.removeAttribute('data-hidden')}
+    else{c.setAttribute('data-hidden','')}
+  });
+}
+function watFilterVideo(btn){
+  document.querySelectorAll('.wat-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.wat-card').forEach(c=>{
+    if(c.querySelector('video')){c.removeAttribute('data-hidden')}
+    else{c.setAttribute('data-hidden','')}
+  });
+}
+</script>
 
 <!-- ========== HOW IT WORKS ========== -->
 <section id="how-it-works" style="padding:5rem 0;background:var(--bg2)">
@@ -2331,7 +2487,7 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
       <div class="team-card glass dev-card" data-animate><img class="dev-photo" src="images/team/bu.jpg" alt="BULA MANJONG CHRISTIAN" loading="lazy"><h4>BULA MANJONG CHRISTIAN</h4><p>Network Administrator</p></div>
       <div class="team-card glass dev-card" data-animate><img class="dev-photo" src="images/team/yam.jpg" alt="TANDU YANMICK" loading="lazy"><h4>TANDU YANMICK</h4><p data-i18n="role.dev">Developer</p></div>
       <div class="team-card glass dev-card" data-animate><img class="dev-photo" src="images/team/zin.jpg" alt="YAMBAH NJIKI CABREL" loading="lazy"><h4>YAMBAH NJIKI CABREL</h4><p data-i18n="role.dev">Developer</p></div>
-      <div class="team-card glass dev-card" data-animate><img class="dev-photo" src="images/team/cleo.jpg" alt="MRS CLEO" loading="lazy"><h4>MRS CLEO</h4><p data-i18n="role.dev">Developer</p></div>
+      <div class="team-card glass dev-card" data-animate><img class="dev-photo" src="images/team/ran.jpg" alt="RANSOME NJUALE" loading="lazy"><h4>RANSOME NJUALE</h4><p>CCTV TECH SS</p></div>
     </div>
   </div>
 </section>
