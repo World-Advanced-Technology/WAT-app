@@ -21,15 +21,13 @@
 <!-- Resource hints: preconnect speeds up first-party fetches -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- DNS prefetch for third-party CDNs -->
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://fonts.gstatic.com">
-<!-- Fonts: only the weights actually used; swap prevents invisible text -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;900&family=JetBrains+Mono:wght@400&display=swap">
+<!-- Non-blocking font load -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;900&family=JetBrains+Mono:wght@400&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;900&family=JetBrains+Mono:wght@400&display=swap"></noscript>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<!-- Preload above-fold image -->
+<link rel="preload" as="image" href="images/team/ceo2.jpg">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <!-- AWS SDK removed — not used in this project (was blocking ~2 MB on every load) -->
 <style>
 :root{
@@ -55,7 +53,7 @@
 /* System font stack shows instantly while Google Fonts load */
 :root{--fb:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--fh:'Montserrat',var(--fb);--fm:'JetBrains Mono','Courier New',monospace}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:16px;text-rendering:optimizeSpeed}
+html{scroll-behavior:smooth;font-size:16px;text-rendering:optimizeSpeed;-webkit-text-size-adjust:100%}
 body{font-family:var(--fb);background:var(--bg);color:var(--txt);transition:background var(--tr),color var(--tr);overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
 a{color:inherit;text-decoration:none}ul{list-style:none}img{max-width:100%;display:block}
@@ -432,11 +430,93 @@ footer{background:#050e1f;border-top:1px solid var(--bdr);padding:4rem 0 2rem}
 #btt:hover{background:var(--goldd);border-color:var(--goldb);color:var(--gold)}
 /* ===== USER NAV ===== */
 .user-greeting{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--teal)}
-@media(max-width:560px){.hero-stats{gap:1.5rem}.hero-ctas{flex-direction:column;align-items:center}}
+/* ===== HERO RESPONSIVE ===== */
+
+/* Tablet (≤ 768px) */
+@media(max-width:768px){
+  #hero{padding-top:70px}
+  .hero-content{padding:1.8rem 0 2.5rem}
+  .terminal{max-width:100%;font-size:.72rem}
+  .hero-stats{gap:1rem;margin-top:2.2rem;padding-top:1.8rem}
+  .hstat{min-width:calc(50% - .5rem);flex:none}
+  .hstat-n{font-size:2rem}
+}
+
+/* Mobile (≤ 560px) */
+@media(max-width:560px){
+  .hero-content{padding:1.5rem 0 3rem}
+  .hero-badge{font-size:.7rem;padding:.3rem .9rem;letter-spacing:.05em}
+  .hero-title{margin-bottom:1rem}
+  .hero-sub{margin-bottom:1.6rem;font-size:.97rem}
+  .hero-ctas{flex-direction:column;align-items:stretch;gap:.6rem}
+  .hero-ctas .btn{width:100%;text-align:center;justify-content:center}
+  .terminal{margin-top:1.2rem;padding:.75rem .9rem;font-size:.68rem}
+  .terminal-title{font-size:.55rem}
+  .term-body{line-height:1.75}
+  .hero-stats{gap:.75rem;margin-top:1.8rem;padding-top:1.4rem}
+  .hstat{min-width:calc(50% - .38rem);flex:none;padding:.75rem .9rem}
+  .hstat-n{font-size:1.75rem}
+  .hstat-l{font-size:.6rem;letter-spacing:.06em}
+}
+
+/* Small phones (≤ 400px) */
+@media(max-width:400px){
+  .hero-badge{display:none}
+  .hero-title{font-size:clamp(1.9rem,8vw,2.4rem)}
+  .hero-sub{font-size:.9rem}
+  .terminal{display:none}
+  .hero-stats{gap:.6rem;margin-top:1.5rem}
+  .hstat{padding:.6rem .7rem}
+  .hstat-n{font-size:1.55rem}
+  .scroll-down{bottom:1rem}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* ── Photo styles ── */
-.ceo-photo-frame{width:156px;height:156px;border-radius:50%;background:#ffffff;display:flex;align-items:center;justify-content:center;margin:0 auto;padding:6px;box-shadow:0 0 0 5px var(--goldd),0 8px 32px rgba(255,215,0,.3);animation:float 5s ease-in-out infinite;flex-shrink:0}
-.ceo-photo{width:144px;height:144px;border-radius:50%;object-fit:cover;object-position:top;display:block;background:#ffffff}
+/* ── CEO 3D card ── */
+.ceo-photo-frame{
+  width:200px;height:240px;border-radius:20px;
+  perspective:900px;transform-style:preserve-3d;
+  margin:0 auto;flex-shrink:0;cursor:pointer;
+  animation:ceo3d-float 6s ease-in-out infinite;
+}
+.ceo-photo-frame-inner{
+  width:100%;height:100%;border-radius:20px;
+  transform-style:preserve-3d;
+  animation:ceo3d-spin 8s ease-in-out infinite;
+  position:relative;
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,0,.35),
+    0 20px 60px rgba(0,0,0,.65),
+    0 0 40px rgba(255,215,0,.12),
+    6px 0 30px rgba(0,212,255,.1);
+}
+.ceo-photo{
+  width:100%;height:100%;border-radius:20px;
+  object-fit:cover;object-position:top center;
+  display:block;
+}
+/* Sheen overlay */
+.ceo-photo-frame-inner::after{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,transparent 45%,rgba(0,212,255,.06) 100%);
+  pointer-events:none;
+}
+/* Gold bottom bar */
+.ceo-photo-frame-inner::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:4px;
+  border-radius:0 0 20px 20px;
+  background:linear-gradient(90deg,var(--teal),var(--gold),var(--teal));
+  z-index:2;
+}
+@keyframes ceo3d-float{
+  0%,100%{transform:translateY(0) rotateY(0deg) rotateX(2deg)}
+  33%{transform:translateY(-10px) rotateY(6deg) rotateX(-2deg)}
+  66%{transform:translateY(-5px) rotateY(-5deg) rotateX(3deg)}
+}
+@keyframes ceo3d-spin{
+  0%,100%{box-shadow:0 0 0 1.5px rgba(255,215,0,.35),0 20px 60px rgba(0,0,0,.65),0 0 40px rgba(255,215,0,.12),6px 0 30px rgba(0,212,255,.1)}
+  50%{box-shadow:0 0 0 1.5px rgba(0,212,255,.5),0 25px 70px rgba(0,0,0,.7),0 0 50px rgba(0,212,255,.15),-6px 0 30px rgba(255,215,0,.12)}
+}
 .team-photo{width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:top center;display:block;margin:0 auto .9rem;border:2.5px solid var(--goldb);transition:all .4s ease;box-shadow:0 0 0 5px rgba(255,215,0,.07);flex-shrink:0}
 .team-card:hover .team-photo{border-color:var(--teal);box-shadow:0 0 0 5px rgba(0,212,255,.1),0 0 22px rgba(0,212,255,.18)}
 .dev-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;display:block;margin:0 auto .75rem;border:2px solid var(--bdr);transition:all .4s ease;flex-shrink:0}
@@ -773,7 +853,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 2px rgba(0,212,255,.18)
 .ticker-item strong{color:var(--teal)}
 /* ===== HERO STATS CARDS ===== */
 .hero-stats{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-top:3rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.07)}
-.hstat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.9rem 1.6rem;text-align:center;transition:all .35s ease;backdrop-filter:blur(8px);min-width:110px}
+.hstat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.9rem 1.6rem;text-align:center;transition:all .35s ease;backdrop-filter:blur(8px)}
 .hstat:hover{border-color:rgba(0,212,255,.35);background:rgba(0,212,255,.06);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,212,255,.12)}
 .hstat-n{font-family:var(--fh);font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .hstat-n::after{content:attr(data-suffix);font-size:1.2rem}
@@ -1579,8 +1659,9 @@ body:not(.theme-light) .hero-bg{background:radial-gradient(ellipse 80% 60% at 50
 @keyframes tickerDotPop{0%,100%{transform:scale(1);box-shadow:0 0 6px rgba(0,212,255,.7)}50%{transform:scale(1.5);box-shadow:0 0 14px rgba(0,212,255,1)}}
 
 /* About section CEO frame 3D */
-.ceo-photo-frame{transition:transform .4s ease,box-shadow .4s ease}
-.ceo-photo-frame:hover{transform:rotateY(12deg) rotateX(-6deg) scale(1.04);box-shadow:0 0 0 6px rgba(255,215,0,.25),0 20px 50px rgba(255,215,0,.3),20px 0 40px rgba(0,212,255,.15)}
+.ceo-photo-frame{transition:transform .3s ease}
+.ceo-photo-frame:hover{animation-play-state:paused;transform:translateY(-6px) rotateY(10deg) rotateX(-5deg) scale(1.04)!important}
+.ceo-photo-frame:hover .ceo-photo-frame-inner{box-shadow:0 0 0 2px rgba(255,215,0,.6),0 30px 80px rgba(0,0,0,.75),0 0 60px rgba(255,215,0,.2),16px 0 50px rgba(0,212,255,.2)!important}
 
 /* Neon glow on active nav link */
 .nav-links a.active{text-shadow:0 0 10px rgba(0,212,255,.6)!important}
@@ -1638,8 +1719,8 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
 /* Step numbers intense neon */
 .step-num{box-shadow:0 0 30px currentColor,0 0 60px currentColor,0 8px 24px rgba(0,0,0,.7)!important}
 /* CEO photo spectacular 3D */
-.ceo-photo-frame{box-shadow:0 0 0 7px rgba(255,215,0,.38),0 0 50px rgba(255,215,0,.6),0 0 95px rgba(255,215,0,.3),0 48px 95px rgba(0,0,0,.58),24px 0 75px rgba(0,212,255,.24)!important}
-.ceo-photo-frame:hover{transform:rotateY(22deg) rotateX(-13deg) scale(1.08)!important;box-shadow:0 0 0 9px rgba(255,215,0,.45),0 0 75px rgba(255,215,0,.75),0 0 130px rgba(255,215,0,.38),0 48px 95px rgba(0,0,0,.65),38px 0 95px rgba(0,212,255,.32)!important}
+.ceo-photo-frame-inner{box-shadow:0 0 0 2px rgba(255,215,0,.45),0 0 55px rgba(255,215,0,.2),0 0 100px rgba(255,215,0,.12),0 50px 100px rgba(0,0,0,.6),28px 0 80px rgba(0,212,255,.18)!important}
+.ceo-photo-frame:hover .ceo-photo-frame-inner{box-shadow:0 0 0 2.5px rgba(255,215,0,.65),0 0 80px rgba(255,215,0,.35),0 0 140px rgba(255,215,0,.2),0 50px 100px rgba(0,0,0,.7),42px 0 100px rgba(0,212,255,.3)!important}
 /* Logo 3D ultra extrusion */
 .logo-3d-card{box-shadow:2px 2px 0 rgba(0,190,230,.98),4px 4px 0 rgba(0,170,210,.84),6px 6px 0 rgba(0,150,190,.68),8px 8px 0 rgba(0,130,170,.52),10px 10px 0 rgba(0,110,150,.38),12px 12px 0 rgba(0,90,130,.24),14px 14px 0 rgba(0,70,110,.14),16px 16px 0 rgba(0,50,90,.07),0 34px 80px rgba(0,0,0,.72),0 0 75px rgba(0,212,255,.32)!important}
 /* Cursor trail element */
@@ -2166,7 +2247,9 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
       <div class="about-card glass" style="padding:2.5rem;text-align:center" data-animate-right>
         <div class="ceo-avatar-wrap">
           <div class="ceo-photo-frame">
-            <img class="ceo-photo" src="images/team/ceo3.jpg" alt="NGWA CLOVIS OCHANG – CEO" loading="lazy">
+            <div class="ceo-photo-frame-inner">
+              <img class="ceo-photo" src="images/team/ceo2.jpg" alt="NGWA CLOVIS OCHANG – CEO" fetchpriority="high">
+            </div>
           </div>
           <div class="ceo-info">
             <h3 data-i18n="ceo.name">NGWA CLOVIS OCHANG</h3>
@@ -2302,158 +2385,343 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
 </section>
 
 <!-- ========== OUR WORK / GALLERY ========== -->
-<section id="our-work" class="sec" style="background:var(--bg2)">
-  <div class="container">
-    <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem">Real Projects</p>
-    <h2 class="sec-title" style="text-align:center;margin-bottom:.5rem">Our Work in Action</h2>
-    <p class="sec-sub">From CCTV installations to server rooms — real jobs done by the WAT team on the ground.</p>
+<!-- ======= CINEMA LIGHTBOX ======= -->
+<div id="cin-lb" aria-modal="true" role="dialog">
+  <div id="cin-lb-bg" onclick="cinClose()"></div>
+  <button class="cin-lb-close" onclick="cinClose()">&#10005;</button>
+  <button class="cin-lb-nav" id="cin-prev" onclick="cinNav(-1)">&#8249;</button>
+  <button class="cin-lb-nav" id="cin-next" onclick="cinNav(1)">&#8250;</button>
+  <div id="cin-lb-inner">
+    <div id="cin-lb-media"></div>
+    <div id="cin-lb-info">
+      <span id="cin-lb-tag"></span>
+      <p id="cin-lb-caption"></p>
+      <span id="cin-lb-counter"></span>
+    </div>
+  </div>
+</div>
 
-    <!-- Filter Buttons -->
-    <div style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2.5rem">
-      <button class="wat-filter-btn active" data-filter="all" onclick="watFilter(this,'all')">All</button>
-      <button class="wat-filter-btn" data-filter="cctv" onclick="watFilter(this,'cctv')">CCTV</button>
-      <button class="wat-filter-btn" data-filter="network" onclick="watFilter(this,'network')">Network</button>
-      <button class="wat-filter-btn" data-filter="wireless" onclick="watFilter(this,'wireless')">Wireless</button>
-      <button class="wat-filter-btn" data-filter="support" onclick="watFilter(this,'support')">IT Support</button>
-      <button class="wat-filter-btn" data-filter="video" onclick="watFilterVideo(this)">&#9654; Videos</button>
+<section id="our-work" class="cin-section" style="content-visibility:auto;contain-intrinsic-size:0 2400px">
+  <div class="container" style="position:relative;z-index:1">
+    <p class="cin-eyebrow">&#9654;&nbsp; Real Projects &nbsp;&#9654;</p>
+    <h2 class="sec-title cin-title" style="text-align:center;margin-bottom:.5rem">Our Work in Action</h2>
+    <p class="sec-sub" style="margin-bottom:2.8rem">From CCTV installations to server rooms — real jobs captured on the ground by the WAT team.</p>
+
+    <!-- Filters -->
+    <div class="cin-filters">
+      <button class="cin-btn active" data-filter="all"      onclick="cinFilter(this,'all')">All</button>
+      <button class="cin-btn"        data-filter="cctv"     onclick="cinFilter(this,'cctv')">CCTV</button>
+      <button class="cin-btn"        data-filter="network"  onclick="cinFilter(this,'network')">Network</button>
+      <button class="cin-btn"        data-filter="wireless" onclick="cinFilter(this,'wireless')">Wireless</button>
+      <button class="cin-btn"        data-filter="support"  onclick="cinFilter(this,'support')">IT Support</button>
+      <button class="cin-btn"        data-filter="video"    onclick="cinFilterVideo(this)">&#9654; Videos</button>
     </div>
 
-    <!-- Gallery Grid -->
-    <div id="wat-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+    <!-- 3D Grid -->
+    <div class="cin-grid" id="cin-grid">
 
-      <!-- CCTV -->
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/2fdd24cb-a952-401d-9ebe-9b86557907c3.JPG" alt="CCTV dome camera installation" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Dome camera installation — precise mounting on site</p></div>
+      <!-- CCTV photos -->
+      <div class="cin-card" data-cat="cctv" data-type="img" data-src="jobs/2fdd24cb-a952-401d-9ebe-9b86557907c3.JPG" data-caption="Dome camera installation — precise mounting on site" data-tag="CCTV">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/2fdd24cb-a952-401d-9ebe-9b86557907c3.JPG" alt="CCTV dome camera installation" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag cctv-tag">CCTV</span><p>Dome camera installation — precise mounting on site</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/9a3e5939-a693-4dd9-81e3-8433539da04a.JPG" alt="Cable routing for CCTV" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Cable routing and concealment during CCTV setup</p></div>
+      <div class="cin-card" data-cat="cctv" data-type="img" data-src="jobs/9a3e5939-a693-4dd9-81e3-8433539da04a.JPG" data-caption="Cable routing and concealment during CCTV setup" data-tag="CCTV">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/9a3e5939-a693-4dd9-81e3-8433539da04a.JPG" alt="Cable routing for CCTV" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag cctv-tag">CCTV</span><p>Cable routing and concealment during CCTV setup</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_2975.jpg" alt="Completed CCTV system live feed" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>Completed 9-camera CCTV system — live multi-view feed</p></div>
+      <div class="cin-card" data-cat="cctv" data-type="img" data-src="jobs/IMG_2975.jpg" data-caption="Completed 9-camera CCTV system — live multi-view feed" data-tag="CCTV">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_2975.jpg" alt="Completed CCTV live feed" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag cctv-tag">CCTV</span><p>Completed 9-camera CCTV system — live multi-view feed</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/PHOTO-2024-10-06-18-07-05.jpg" alt="CCTV monitoring workstation" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CCTV monitoring workstation configured and operational</p></div>
+      <div class="cin-card" data-cat="cctv" data-type="img" data-src="jobs/PHOTO-2024-10-06-18-07-05.jpg" data-caption="CCTV monitoring workstation configured and operational" data-tag="CCTV">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/PHOTO-2024-10-06-18-07-05.jpg" alt="CCTV monitoring workstation" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag cctv-tag">CCTV</span><p>CCTV monitoring workstation configured and operational</p></div>
+        </div>
       </div>
 
-      <!-- Network -->
-      <div class="wat-card glass" data-cat="network" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_4034.JPG" alt="Structured cabling server rack" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Professional patch panel and structured cabling in server rack</p></div>
+      <!-- Network photos -->
+      <div class="cin-card" data-cat="network" data-type="img" data-src="jobs/IMG_4034.JPG" data-caption="Professional patch panel and structured cabling in server rack" data-tag="Network">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_4034.JPG" alt="Server rack structured cabling" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">Network</span><p>Professional patch panel and structured cabling in server rack</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="network" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_4154.JPG" alt="Full server room setup" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Full server room — three Cisco racks installed and commissioned</p></div>
+      <div class="cin-card" data-cat="network" data-type="img" data-src="jobs/IMG_4154.JPG" data-caption="Full server room — three Cisco racks installed and commissioned" data-tag="Network">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_4154.JPG" alt="Full server room setup" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">Network</span><p>Full server room — three Cisco racks installed and commissioned</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="network" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_8091.jpg" alt="Network cabinet inspection" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Network cabinet inspection and hardware verification</p></div>
+      <div class="cin-card" data-cat="network" data-type="img" data-src="jobs/IMG_8091.jpg" data-caption="Network cabinet inspection and hardware verification" data-tag="Network">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_8091.jpg" alt="Network cabinet inspection" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">Network</span><p>Network cabinet inspection and hardware verification</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="network" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_0136.jpg" alt="On-site equipment setup" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>On-site equipment setup and cabling configuration</p></div>
+      <div class="cin-card" data-cat="network" data-type="img" data-src="jobs/IMG_0136.jpg" data-caption="On-site equipment setup and cabling configuration" data-tag="Network">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_0136.jpg" alt="On-site equipment setup" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">Network</span><p>On-site equipment setup and cabling configuration</p></div>
+        </div>
       </div>
 
-      <!-- Wireless -->
-      <div class="wat-card glass" data-cat="wireless" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_8116.jpg" alt="InfiNet wireless rooftop installation" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-wifi">Wireless</span><p>InfiNet wireless access points installed and configured on rooftop</p></div>
+      <!-- Wireless photos -->
+      <div class="cin-card" data-cat="wireless" data-type="img" data-src="jobs/IMG_8116.jpg" data-caption="InfiNet wireless access points installed and configured on rooftop" data-tag="Wireless">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_8116.jpg" alt="InfiNet wireless rooftop install" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag wifi-tag">Wireless</span><p>InfiNet wireless access points installed and configured on rooftop</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="wireless" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/sta.jpg" alt="Mounted wireless antenna aerial view" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-wifi">Wireless</span><p>Wireless antenna mounted — aerial view of rooftop deployment</p></div>
+      <div class="cin-card" data-cat="wireless" data-type="img" data-src="jobs/sta.jpg" data-caption="Wireless antenna mounted — aerial view of rooftop deployment" data-tag="Wireless">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/sta.jpg" alt="Wireless antenna aerial view" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag wifi-tag">Wireless</span><p>Wireless antenna mounted — aerial view of rooftop deployment</p></div>
+        </div>
       </div>
 
-      <!-- IT Support -->
-      <div class="wat-card glass" data-cat="support" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/fc1cb030-3c15-4bdc-9ff7-a9a557357aea.jpg" alt="On-site technical survey" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-sup">IT Support</span><p>On-site technical survey and project documentation</p></div>
+      <!-- IT Support photos -->
+      <div class="cin-card" data-cat="support" data-type="img" data-src="jobs/fc1cb030-3c15-4bdc-9ff7-a9a557357aea.jpg" data-caption="On-site technical survey and project documentation" data-tag="IT Support">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/fc1cb030-3c15-4bdc-9ff7-a9a557357aea.jpg" alt="On-site technical survey" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag sup-tag">IT Support</span><p>On-site technical survey and project documentation</p></div>
+        </div>
       </div>
 
-      <div class="wat-card glass" data-cat="support" data-animate>
-        <div class="wat-img-wrap"><img src="jobs/IMG_4799.jpg" alt="IT equipment maintenance" loading="lazy"></div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-sup">IT Support</span><p>Office IT equipment servicing and maintenance</p></div>
+      <div class="cin-card" data-cat="support" data-type="img" data-src="jobs/IMG_4799.jpg" data-caption="Office IT equipment servicing and maintenance" data-tag="IT Support">
+        <div class="cin-card-scene">
+          <div class="cin-media"><img src="jobs/IMG_4799.jpg" alt="IT equipment maintenance" loading="lazy"></div>
+          <div class="cin-overlay"><span class="cin-play-ico">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag sup-tag">IT Support</span><p>Office IT equipment servicing and maintenance</p></div>
+        </div>
       </div>
 
       <!-- Videos -->
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-vid-wrap">
-          <video src="jobs/cctv01.mp4" controls muted playsinline preload="metadata"></video>
+      <div class="cin-card cin-card-vid" data-cat="cctv" data-type="vid" data-src="jobs/cctv01.mp4" data-caption="CCTV installation in progress — full site walkthrough" data-tag="CCTV">
+        <div class="cin-card-scene">
+          <div class="cin-media">
+            <video src="jobs/cctv01.mp4" muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="cin-overlay"><span class="cin-play-ico cin-play-big">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag cctv-tag">&#9654; CCTV</span><p>CCTV installation in progress — full site walkthrough</p></div>
         </div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CCTV installation in progress — full site walkthrough</p></div>
       </div>
 
-      <div class="wat-card glass" data-cat="network" data-animate>
-        <div class="wat-vid-wrap">
-          <video src="jobs/IMG_8129.mp4" controls muted playsinline preload="metadata"></video>
+      <div class="cin-card cin-card-vid" data-cat="network" data-type="vid" data-src="jobs/IMG_8129.mp4" data-caption="Network infrastructure deployment — on-site footage" data-tag="Network">
+        <div class="cin-card-scene">
+          <div class="cin-media">
+            <video src="jobs/IMG_8129.mp4" muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="cin-overlay"><span class="cin-play-ico cin-play-big">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">&#9654; Network</span><p>Network infrastructure deployment — on-site footage</p></div>
         </div>
-        <div class="wat-card-body"><span class="wat-tag wat-tag-net">Network</span><p>Network infrastructure deployment — on-site footage</p></div>
       </div>
 
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-vid-wrap">
-          <video src="jobs/v09044g40000cud3hovog65vcbr34vp0.MP4" controls muted playsinline preload="metadata"></video>
+      <div class="cin-card cin-card-vid" data-cat="cctv" data-type="vid" data-src="jobs/v09044g40000cud3hovog65vcbr34vp0.MP4" data-caption="KUBERNETES WORKFLOW" data-tag="DevOps">
+        <div class="cin-card-scene">
+          <div class="cin-media">
+            <video src="jobs/v09044g40000cud3hovog65vcbr34vp0.MP4" muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="cin-overlay"><span class="cin-play-ico cin-play-big">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">&#9654; DevOps</span><p>KUBERNETES WORKFLOW</p></div>
         </div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>KUBENETES WORKFLOW</p></div>
       </div>
 
-      <div class="wat-card glass" data-cat="cctv" data-animate>
-        <div class="wat-vid-wrap">
-          <video src="jobs/v09044g40000d1f7ghfog65sslottpt0.MP4" controls muted playsinline preload="metadata"></video>
+      <div class="cin-card cin-card-vid" data-cat="cctv" data-type="vid" data-src="jobs/v09044g40000d1f7ghfog65sslottpt0.MP4" data-caption="CI/CD PIPELINE DEPLOYMENT" data-tag="DevOps">
+        <div class="cin-card-scene">
+          <div class="cin-media">
+            <video src="jobs/v09044g40000d1f7ghfog65sslottpt0.MP4" muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="cin-overlay"><span class="cin-play-ico cin-play-big">&#9654;</span></div>
+          <div class="cin-info"><span class="cin-tag net-tag">&#9654; DevOps</span><p>CI/CD PIPELINE DEPLOYMENT</p></div>
         </div>
-        <div class="wat-card-body"><span class="wat-tag">CCTV</span><p>CI/CD PIPELINE DEPLOYMENT</p></div>
       </div>
 
-    </div>
+    </div><!-- /cin-grid -->
   </div>
 </section>
 
 <style>
-.wat-filter-btn{padding:.45rem 1.1rem;border-radius:2rem;border:1px solid var(--bdr);background:transparent;color:var(--txt2);cursor:pointer;font-size:.82rem;font-weight:600;transition:all .25s}
-.wat-filter-btn:hover,.wat-filter-btn.active{background:linear-gradient(135deg,var(--gold),var(--teal));color:#000;border-color:transparent}
-.wat-card{border-radius:var(--r16);overflow:hidden;transition:transform .3s,box-shadow .3s}
-.wat-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,212,255,.15)}
-.wat-img-wrap{width:100%;height:220px;overflow:hidden}
-.wat-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.wat-card:hover .wat-img-wrap img{transform:scale(1.06)}
-.wat-card-body{padding:1rem 1.1rem}
-.wat-card-body p{color:var(--txt2);font-size:.85rem;margin:.4rem 0 0;line-height:1.45}
-.wat-tag{display:inline-block;padding:.18rem .65rem;border-radius:2rem;font-size:.72rem;font-weight:700;background:rgba(0,212,255,.15);color:var(--teal)}
-.wat-tag-net{background:rgba(255,215,0,.15);color:var(--gold)}
-.wat-tag-wifi{background:rgba(0,255,136,.15);color:#00ff88}
-.wat-tag-sup{background:rgba(189,0,255,.15);color:#c47dff}
-.wat-card[data-hidden]{display:none}
-.wat-vid-wrap{width:100%;height:220px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
-.wat-vid-wrap video{width:100%;height:100%;object-fit:cover}
+/* ---- CINEMA SECTION ---- */
+.cin-section{position:relative;padding:6rem 0 5rem;background:#050c14;overflow:hidden}
+.cin-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,212,255,.07) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(255,215,0,.05) 0%,transparent 60%);pointer-events:none}
+.cin-eyebrow{text-align:center;font-size:.75rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;opacity:.85}
+.cin-title{color:#fff!important;text-shadow:0 0 40px rgba(0,212,255,.3),0 2px 0 rgba(0,0,0,.8)!important}
+
+/* Film strip */
+.cin-strip{height:28px;background:repeating-linear-gradient(90deg,#0a0a0a 0,#0a0a0a 14px,transparent 14px,transparent 22px),linear-gradient(#111,#0a0a0a);border-top:2px solid rgba(255,215,0,.15);border-bottom:2px solid rgba(255,215,0,.15);position:relative;z-index:2}
+.cin-strip::before{content:'';position:absolute;inset:4px 0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0,rgba(255,255,255,.06) 14px,transparent 14px,transparent 22px)}
+.cin-strip-bot{margin-top:4rem}
+
+/* Filters */
+.cin-filters{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-bottom:3rem}
+.cin-btn{padding:.42rem 1.15rem;border-radius:2rem;border:1px solid rgba(255,215,0,.25);background:rgba(255,215,0,.04);color:rgba(255,255,255,.55);cursor:pointer;font-size:.78rem;font-weight:700;letter-spacing:.04em;transition:all .25s;text-transform:uppercase}
+.cin-btn:hover,.cin-btn.active{background:linear-gradient(135deg,var(--gold),var(--teal));color:#000;border-color:transparent;box-shadow:0 4px 20px rgba(0,212,255,.25)}
+
+/* 3D Grid */
+.cin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.6rem;perspective:1200px}
+
+/* Cards */
+.cin-card{perspective:900px;cursor:pointer;transform-style:preserve-3d;transition:opacity .4s,transform .4s}
+.cin-card[data-hidden]{display:none}
+.cin-card-scene{position:relative;border-radius:12px;overflow:hidden;transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .3s;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(255,215,0,.08);background:#0a111a}
+.cin-card:hover .cin-card-scene{box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 0 1px rgba(255,215,0,.25),0 0 40px rgba(0,212,255,.12)}
+
+/* Media area */
+.cin-media{width:100%;height:210px;overflow:hidden;position:relative}
+.cin-media img,.cin-media video{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .4s;display:block;filter:brightness(.88) saturate(1.1)}
+.cin-card:hover .cin-media img,.cin-card:hover .cin-media video{transform:scale(1.07);filter:brightness(1) saturate(1.2)}
+
+/* Hover overlay */
+.cin-overlay{position:absolute;inset:0;top:0;left:0;right:0;bottom:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,0,0,.0),rgba(0,0,0,.0));transition:background .3s;pointer-events:none;z-index:2}
+.cin-card:hover .cin-overlay{background:linear-gradient(135deg,rgba(0,10,25,.35),rgba(0,212,255,.08))}
+.cin-play-ico{width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,215,0,.7);background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--gold);opacity:0;transform:scale(.7);transition:opacity .3s,transform .3s;backdrop-filter:blur(4px)}
+.cin-card:hover .cin-play-ico{opacity:1;transform:scale(1)}
+.cin-play-big{width:58px;height:58px;font-size:1.1rem;border-color:rgba(0,212,255,.8);color:var(--teal);opacity:.7;transform:scale(.85)}
+.cin-card-vid:hover .cin-play-big{opacity:1;transform:scale(1)}
+
+/* Bottom info bar */
+.cin-info{position:relative;padding:.75rem 1rem;background:linear-gradient(180deg,rgba(5,12,20,.85) 0%,rgba(5,12,20,.98) 100%);border-top:1px solid rgba(255,215,0,.08);z-index:3}
+.cin-info p{margin:.3rem 0 0;font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Tags */
+.cin-tag{display:inline-block;padding:.15rem .6rem;border-radius:3px;font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.cctv-tag{background:rgba(0,212,255,.15);color:#00d4ff;border:1px solid rgba(0,212,255,.25)}
+.net-tag{background:rgba(255,215,0,.12);color:#ffd700;border:1px solid rgba(255,215,0,.22)}
+.wifi-tag{background:rgba(0,255,136,.1);color:#00ff88;border:1px solid rgba(0,255,136,.2)}
+.sup-tag{background:rgba(189,0,255,.12);color:#c47dff;border:1px solid rgba(189,0,255,.22)}
+
+/* ---- LIGHTBOX ---- */
+#cin-lb{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center}
+#cin-lb.open{display:flex}
+#cin-lb-bg{position:absolute;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(8px);cursor:pointer}
+.cin-lb-close{position:absolute;top:1.2rem;right:1.4rem;z-index:10;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:40px;height:40px;border-radius:50%;font-size:1rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center}
+.cin-lb-close:hover{background:rgba(255,60,60,.4)}
+.cin-lb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;width:48px;height:64px;border-radius:6px;font-size:2rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;line-height:1}
+.cin-lb-nav:hover{background:rgba(0,212,255,.2)}
+#cin-prev{left:1rem}
+#cin-next{right:1rem}
+#cin-lb-inner{position:relative;z-index:5;max-width:92vw;max-height:92vh;display:flex;flex-direction:column;align-items:center;gap:.8rem}
+#cin-lb-media{max-width:88vw;max-height:78vh;display:flex;align-items:center;justify-content:center}
+#cin-lb-media img{max-width:88vw;max-height:78vh;border-radius:8px;box-shadow:0 0 80px rgba(0,0,0,.9),0 0 0 1px rgba(255,215,0,.1);object-fit:contain}
+#cin-lb-media video{max-width:88vw;max-height:78vh;border-radius:8px;box-shadow:0 0 80px rgba(0,0,0,.9);outline:none}
+#cin-lb-info{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.5rem 1rem}
+#cin-lb-caption{color:rgba(255,255,255,.75);font-size:.88rem;margin:0}
+#cin-lb-counter{color:rgba(255,255,255,.35);font-size:.75rem;white-space:nowrap;margin-left:.5rem}
+
+@media(max-width:600px){
+  .cin-grid{grid-template-columns:1fr}
+  #cin-lb-media img,#cin-lb-media video{max-width:95vw;max-height:60vh}
+  .cin-lb-nav{display:none}
+}
 </style>
 
 <script>
-function watFilter(btn,cat){
-  document.querySelectorAll('.wat-filter-btn').forEach(b=>b.classList.remove('active'));
+/* ---- 3D tilt ---- */
+document.querySelectorAll('.cin-card').forEach(card=>{
+  const scene=card.querySelector('.cin-card-scene');
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=((e.clientX-r.left)/r.width-.5)*18;
+    const y=-((e.clientY-r.top)/r.height-.5)*14;
+    scene.style.transform=`rotateY(${x}deg) rotateX(${y}deg) translateZ(6px)`;
+  });
+  card.addEventListener('mouseleave',()=>{scene.style.transform='rotateY(0deg) rotateX(0deg) translateZ(0)'});
+  /* video hover play */
+  const vid=card.querySelector('video');
+  if(vid){card.addEventListener('mouseenter',()=>vid.play());card.addEventListener('mouseleave',()=>{vid.pause();vid.currentTime=0})}
+  card.addEventListener('click',()=>cinOpen(card));
+});
+
+/* ---- Filter ---- */
+function cinFilter(btn,cat){
+  document.querySelectorAll('.cin-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.wat-card').forEach(c=>{
-    if(cat==='all'||c.dataset.cat===cat){c.removeAttribute('data-hidden')}
-    else{c.setAttribute('data-hidden','')}
+  document.querySelectorAll('.cin-card').forEach(c=>{
+    (cat==='all'||c.dataset.cat===cat)?c.removeAttribute('data-hidden'):c.setAttribute('data-hidden','');
   });
 }
-function watFilterVideo(btn){
-  document.querySelectorAll('.wat-filter-btn').forEach(b=>b.classList.remove('active'));
+function cinFilterVideo(btn){
+  document.querySelectorAll('.cin-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.wat-card').forEach(c=>{
-    if(c.querySelector('video')){c.removeAttribute('data-hidden')}
-    else{c.setAttribute('data-hidden','')}
+  document.querySelectorAll('.cin-card').forEach(c=>{
+    c.dataset.type==='vid'?c.removeAttribute('data-hidden'):c.setAttribute('data-hidden','');
   });
 }
+
+/* ---- Lightbox ---- */
+let cinItems=[],cinIdx=0;
+function cinBuildItems(){
+  cinItems=[...document.querySelectorAll('.cin-card:not([data-hidden])')];
+}
+function cinOpen(card){
+  cinBuildItems();
+  cinIdx=cinItems.indexOf(card);
+  cinShow(cinIdx);
+  document.getElementById('cin-lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function cinShow(i){
+  const c=cinItems[i];
+  if(!c)return;
+  const med=document.getElementById('cin-lb-media');
+  const lb=document.getElementById('cin-lb');
+  /* stop any playing video */
+  med.querySelectorAll('video').forEach(v=>{v.pause();v.remove()});
+  med.querySelectorAll('img').forEach(im=>im.remove());
+  if(c.dataset.type==='vid'){
+    const v=document.createElement('video');
+    v.src=c.dataset.src;v.controls=true;v.autoplay=true;v.playsinline=true;
+    med.appendChild(v);
+  } else {
+    const img=document.createElement('img');
+    img.src=c.dataset.src;img.alt=c.dataset.caption||'';
+    med.appendChild(img);
+  }
+  document.getElementById('cin-lb-tag').className='cin-tag '+(c.dataset.cat==='cctv'?'cctv-tag':c.dataset.cat==='network'?'net-tag':c.dataset.cat==='wireless'?'wifi-tag':'sup-tag');
+  document.getElementById('cin-lb-tag').textContent=c.dataset.tag||'';
+  document.getElementById('cin-lb-caption').textContent=c.dataset.caption||'';
+  document.getElementById('cin-lb-counter').textContent=(i+1)+' / '+cinItems.length;
+}
+function cinClose(){
+  document.getElementById('cin-lb').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('cin-lb-media').querySelectorAll('video').forEach(v=>v.pause());
+}
+function cinNav(dir){
+  cinIdx=(cinIdx+dir+cinItems.length)%cinItems.length;
+  cinShow(cinIdx);
+}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('cin-lb').classList.contains('open'))return;
+  if(e.key==='ArrowRight')cinNav(1);
+  else if(e.key==='ArrowLeft')cinNav(-1);
+  else if(e.key==='Escape')cinClose();
+});
 </script>
 
 <!-- ========== HOW IT WORKS ========== -->
@@ -2707,13 +2975,13 @@ function watFilterVideo(btn){
 </section>
 
 <!-- ========== TEAM ========== -->
-<section id="team" class="sec">
+<section id="team" class="sec" style="content-visibility:auto;contain-intrinsic-size:0 900px">
   <div class="container">
     <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem" data-i18n="team.label">The People</p>
     <h2 class="sec-title" data-i18n="team.title">Our Team</h2>
     <p class="sec-sub" data-i18n="team.sub">Professional, well-trained specialists dedicated to your success</p>
     <div class="team-lead-grid">
-      <div class="team-card glass lead-card" data-animate><img class="team-photo" src="images/team/ceo3.jpg" alt="NGWA CLOVIS OCHANG" loading="lazy"><h4>NGWA CLOVIS OCHANG</h4><p data-i18n="role.ceo">CEO &amp; Founder</p><span class="team-role-badge badge-ceo">CEO</span></div>
+      <div class="team-card glass lead-card" data-animate><img class="team-photo" src="images/team/ceo2.jpg" alt="NGWA CLOVIS OCHANG" loading="lazy"><h4>NGWA CLOVIS OCHANG</h4><p data-i18n="role.ceo">CEO &amp; Founder</p><span class="team-role-badge badge-ceo">CEO</span></div>
       <div class="team-card glass lead-card" data-animate><img class="team-photo" src="images/team/em.jpg" alt="EMILE NKEH" loading="lazy"><h4>EMILE NKEH</h4><p data-i18n="role.itm">IT Manager</p><span class="team-role-badge badge-it">IT MGR</span></div>
             <div class="team-card glass lead-card" data-animate><img class="team-photo" src="images/team/cal.jpg" alt="NDAM CALEB AKORO" loading="lazy"><h4>NDAM CALEB AKORO</h4><p>DevOps Engineer & Team Leader</p><span class="team-role-badge badge-tl">LEAD</span></div>
       <div class="team-card glass lead-card" data-animate><img class="team-photo" src="images/team/andy.jpg" alt="ANDY" loading="lazy"><h4>ANDY</h4><p>AWS Cloud Engineer & Team Leader</p><span class="team-role-badge badge-tl">LEAD</span></div>
@@ -2730,7 +2998,7 @@ function watFilterVideo(btn){
 </section>
 
 <!-- ========== TESTIMONIALS ========== -->
-<section id="testimonials" class="sec" style="background:var(--bg2)">
+<section id="testimonials" class="sec" style="background:var(--bg2);content-visibility:auto;contain-intrinsic-size:0 600px">
   <div class="container">
     <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem" data-i18n="testi.label">Social Proof</p>
     <h2 class="sec-title" data-i18n="testi.title">What Our Clients Say</h2>
@@ -2810,7 +3078,7 @@ function watFilterVideo(btn){
 </div>
 
 <!-- ========== PAYMENT ========== -->
-<section id="payment" class="sec pay-section">
+<section id="payment" class="sec pay-section" style="content-visibility:auto;contain-intrinsic-size:0 700px">
   <div class="container">
     <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem" data-i18n="pay.label">Easy Payments</p>
     <h2 class="sec-title" data-i18n="pay.title">Payment Methods</h2>
@@ -2984,7 +3252,7 @@ function watFilterVideo(btn){
 </section>
 
 <!-- ========== CAREERS ========== -->
-<section id="careers" class="sec" style="background:var(--bg2)">
+<section id="careers" class="sec" style="background:var(--bg2);content-visibility:auto;contain-intrinsic-size:0 600px">
   <div class="container">
     <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem" data-i18n="career.label">Join Our Team</p>
     <h2 class="sec-title" data-i18n="career.title"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:.4rem;color:var(--gold);filter:drop-shadow(0 0 8px rgba(255,215,0,.55))" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>We Are Hiring!</h2>
@@ -3083,7 +3351,7 @@ function watFilterVideo(btn){
 </section>
 
 <!-- ========== REVIEWS ========== -->
-<section id="reviews" class="sec" style="background:var(--bg2)">
+<section id="reviews" class="sec" style="background:var(--bg2);content-visibility:auto;contain-intrinsic-size:0 500px">
   <div class="container">
     <p class="grad" style="text-align:center;font-weight:700;letter-spacing:.1em;font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem" data-i18n="rev.label">Reviews</p>
     <h2 class="sec-title" data-i18n="rev.title">Leave a Review</h2>
