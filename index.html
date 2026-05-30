@@ -2144,12 +2144,6 @@ footer{border-top:2px solid transparent!important;border-image:linear-gradient(9
           <li data-lang="zh"><span>🇨🇳</span> 中文</li>
         </ul>
       </div>
-      <!-- Theme Toggle -->
-      <button class="theme-toggle" id="theme-btn" title="Toggle dark / light mode" aria-label="Toggle theme">
-        <span class="ti ti-moon">🌙</span>
-        <div class="t-track"><div class="t-thumb"></div></div>
-        <span class="ti ti-sun">☀️</span>
-      </button>
       <span id="user-nav"></span>
       <button class="btn btn-gold" style="padding:.4rem 1rem;font-size:.8rem" id="open-register" data-i18n="nav.register">Register</button>
     </div>
@@ -3909,9 +3903,6 @@ document.querySelectorAll('#lang-menu li').forEach(li=>{
   li.addEventListener('click',()=>applyLang(li.dataset.lang));
 });
 document.addEventListener('click',()=>langSelect.classList.remove('open'));
-
-/* Theme toggle */
-document.getElementById('theme-btn').addEventListener('click',()=>applyTheme(currentTheme==='dark'?'light':'dark'));
 
 applyLang(currentLang);applyTheme(currentTheme);
 document.getElementById('fyear').textContent=new Date().getFullYear();
