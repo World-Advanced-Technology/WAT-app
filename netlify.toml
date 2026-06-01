@@ -1,6 +1,10 @@
 [build]
   publish = "."
 
+# Serverless functions (GitHub OAuth code exchange lives here)
+[functions]
+  directory = "netlify/functions"
+
 # Security & performance headers for all pages
 [[headers]]
   for = "/*"
